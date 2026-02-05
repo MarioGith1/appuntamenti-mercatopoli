@@ -311,7 +311,8 @@ def show_dashboard():
         st.rerun()
 
 def show_prenota_appuntamento():
-    """Prenota appuntamento migliorata"""
+   # App prenotazioni appuntamenti - Versione migliorata con cancellazione
+# Updated: 2026-02-05 - Fix for Streamlit Cloud deployment
     st.subheader("📅 Prenota Nuovo Appuntamento")
     
     db = DatabaseManager()
