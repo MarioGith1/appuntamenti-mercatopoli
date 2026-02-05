@@ -541,6 +541,9 @@ def main():
     if 'user_email' not in st.session_state:
         st.session_state.user_email = ""
     
+    if 'conferma_cancellazione' not in st.session_state:
+        st.session_state.conferma_cancellazione = False
+    
     # Routing
     if not st.session_state.logged_in:
         show_login()
