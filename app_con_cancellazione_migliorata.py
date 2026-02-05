@@ -6,7 +6,6 @@ import os
 from datetime import datetime, timedelta
 import hashlib
 import secrets
-import pandas as pd
 
 # --- DATABASE PERSISTENTE SU FILE ---
 class FileDatabase:
@@ -359,13 +358,13 @@ def show_miei_appuntamenti():
         if futuri:
             st.info("🗑️ **Puoi cancellare i tuoi appuntamenti futuri!**")
             
-            # Crea DataFrame per visualizzazione
-            df = pd.DataFrame(futuri)
-            df['Data'] = pd.to_datetime(df['data']).dt.strftime('%d/%m/%Y')
-            df = df[['Data', 'ora', 'categoria', 'stato']]
-            df.columns = ['Data', 'Orario', 'Categoria', 'Stato']
-            
-            st.dataframe(df, use_container_width=True)
+            # Converti in formato tabellare senza pandas
+            if futuri:
+                for app in futuri:
+                    app['Data'] = datetime.strptime(app['data'], '%Y-%m-%d').strftime('%d/%m/%Y')
+                st.table(futuri)
+            else:
+                st.info("Nessun appuntamento futuro trovato")
             
             # Sezione cancellazione MIGLIORATA
             st.markdown("---")
@@ -460,12 +459,13 @@ def show_lista_attesa():
     lista = db.get_lista_attesa()
     
     if lista:
-        df = pd.DataFrame(lista)
-        df['Data Aggiunta'] = pd.to_datetime(df['created_at']).dt.strftime('%d/%m/%Y %H:%M')
-        df = df[['email', 'categoria', 'Data Aggiunta']]
-        df.columns = ['Email', 'Categoria', 'Data Aggiunta']
-        
-        st.dataframe(df, use_container_width=True)
+        # Converti in formato tabellare senza pandas
+        if lista:
+            for item in lista:
+                item['Data Aggiunta'] = datetime.strptime(item['created_at'], '%Y-%m-%d %H:%M:%S').strftime('%d/%m/%Y %H:%M')
+            st.table(lista)
+        else:
+            st.info("Nessuna richiesta in lista d'attesa")
         
         # Controlla se utente è già in lista
         user_in_list = [w for w in lista if w.get('email') == st.session_state.user_email]
